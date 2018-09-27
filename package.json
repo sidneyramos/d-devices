@@ -1,0 +1,44 @@
+{
+  "name": "DDevices",
+  "version": "1.0.0",
+  "description": "DDevices",
+  "repository": "https://github.com/sidramos/d-devices",
+  "author": "Sidney Ramos",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js",
+    "lint": "standard"
+  },
+  "dependencies": {
+    "apollo-cache-inmemory": "^1.1.1",
+    "apollo-client": "^2.0.3",
+    "apollo-link-http": "^1.2.0",
+    "babel-loader": "^7.1.5",
+    "express": "^4.16.2",
+    "graphql": "^0.11.7",
+    "graphql-anywhere": "^4.0.1",
+    "graphql-tag": "^2.5.0",
+    "isomorphic-unfetch": "^2.0.0",
+    "next": "^6.0.3",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-accessible-accordion": "^2.4.4",
+    "react-apollo": "^2.0.1",
+    "react-dom": "^16.2.0",
+    "react-markdown": "^3.1.0",
+    "react-slick": "^0.23.1",
+    "slick-carousel": "^1.8.1",
+    "styled-jsx-css-loader": "^0.3.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.0.2",
+    "node-sass": "^4.9.2",
+    "standard": "^10.0.3",
+    "styled-jsx-plugin-sass": "^0.2.4"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  }
+}
