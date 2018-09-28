@@ -20,9 +20,9 @@ import {
   CardSubtitle,
   CardText,
   Button,
-  Modal, 
-  ModalHeader, 
-  ModalBody, 
+  Modal,
+  ModalHeader,
+  ModalBody,
   ModalFooter,
   Badge,
   Alert
@@ -34,19 +34,22 @@ import '../styles/DeviceList.scss'
 class DeviceList extends Component {
   constructor(props) {
     super(props)
-    
+
     this.state = {
       modal: false,
+      bookingModal: false,
       modalDevice: null,
     }
-    
+
     this.toggleModal = this.toggleModal.bind(this);
+    this.toggleBookingModal = this.toggleBookingModal.bind(this);
+
   }
-  
+
   toggleModal(id, categorySlug) {
     const {categories} = this.props.data;
     let device;
-    
+
     const category = categories.reduce((total,item) => {
       let res = total;
       if (item.slug === categorySlug) {
@@ -54,7 +57,7 @@ class DeviceList extends Component {
       }
       return res;
     }, null);
-    
+
     if (category) {
       device = category.devices.reduce((total, item) => {
         let res = total;
@@ -63,12 +66,42 @@ class DeviceList extends Component {
         }
         return res;
       }, null);
-      
+
     }
-    
+
     this.setState({
       modal: !this.state.modal,
+      bookingModal: false,
       modalDevice: device,
+    });
+  }
+
+  toggleBookingModal(id, categorySlug) {
+    const {categories} = this.props.data;
+    let device;
+
+    const category = categories.reduce((total,item) => {
+      let res = total;
+      if (item.slug === categorySlug) {
+        res = item;
+      }
+      return res;
+    }, null);
+
+    if (category) {
+      device = category.devices.reduce((total, item) => {
+        let res = total;
+        if (item.deviceId === id) {
+          res = item;
+        }
+        return res;
+      }, null);
+
+    }
+    this.setState({
+      modal: false,
+      bookingModal: !this.state.bookingModal,
+      modalDevice: device ? device : this.state.modalDevice,
     });
   }
 
@@ -84,10 +117,20 @@ class DeviceList extends Component {
       return (
         <Fragment>
           <Container className="device-list">
-            <Modal isOpen={this.state.modal} toggle={this.toggleModal} className={this.props.className}>
+            <Modal isOpen={this.state.bookingModal} toggle={this.toggleBookingModal} className="booking-modal">
               { modalDevice &&
                 <Fragment>
-                  <ModalHeader toggle={this.toggleModal}>{modalDevice.deviceName}</ModalHeader>
+                  <ModalHeader>Borrow {modalDevice.deviceName}</ModalHeader>
+                  <ModalBody>
+                    <BookingForm id={modalDevice.id} />
+                  </ModalBody>
+                </Fragment>
+              }
+            </Modal>
+            <Modal isOpen={this.state.modal} toggle={this.toggleModal} className="info-modal">
+              { modalDevice &&
+                <Fragment>
+                  <ModalHeader>{modalDevice.deviceName}</ModalHeader>
                   <ModalBody>
                     <p>
                       <Alert color="danger">Please do not update the OS of this device.</Alert>
@@ -97,8 +140,8 @@ class DeviceList extends Component {
                       <p>
                         <Alert color="warning">
                           <p><strong>Currently borrowed by: </strong>{currentBooking.borrowerName}</p>
-                          { 
-                            bookingReturnDate ? 
+                          {
+                            bookingReturnDate ?
                             <p>{`Expect it to be available by ${bookingReturnDate.getDate()} ${months[bookingReturnDate.getMonth()]} ${bookingReturnDate.getFullYear()}`}</p> :
                             <p>No return date has been submitted. Contact Admin for help.</p>
                           }
@@ -122,26 +165,25 @@ class DeviceList extends Component {
                         {modalDevice.notes}
                       </span>
                     </p>
-                    <BookingForm />
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="primary" onClick={this.toggleModal}>Borrow</Button>
+                    <Button color="primary" onClick={() => this.toggleBookingModal(modalDevice.deviceId, modalDevice.category.name)}>Borrow</Button>
                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                   </ModalFooter>
                 </Fragment>
                 }
             </Modal>
-            {categories.map((category) => 
+            {categories.map((category) =>
               <Row>
                 <Col md="12">
                   <h3>{category.name}</h3>
                 </Col>
-                {category.devices.map(device => 
+                {category.devices.map(device =>
                   <Col md="4" className="mb-4">
                     <Card>
-                      <CardImg top width="100%" src={device.image ? 
-                        `https://media.graphcms.com/resize=w:350,h:500,fit:crop/${device.image.handle}` : 
-                        "https://placeholdit.imgix.net/~text?txtsize=33&txt=350%C3%97500&w=350&h=500"} 
+                      <CardImg top width="100%" src={device.image ?
+                        `https://media.graphcms.com/resize=w:350,h:500,fit:crop/${device.image.handle}` :
+                        "https://placeholdit.imgix.net/~text?txtsize=33&txt=350%C3%97500&w=350&h=500"}
                         alt="Card image cap" />
                       <CardBody>
                         <CardTitle>{device.deviceName}</CardTitle>
@@ -152,17 +194,22 @@ class DeviceList extends Component {
                           :
                           <Badge color="success">Available</Badge>
                         }
-                        
+
                         </CardSubtitle>
                         <CardText>
                           <p>
-                            {`Device No: ${device.deviceId}`}
+                            <strong>Device No: </strong>{device.deviceId}
                           </p>
                           <p>
-                            Location: {device.location}
+                            <strong>Location: </strong>{device.location}
                           </p>
                         </CardText>
-                        <Button color={device.bookingQueue.length ? "info" : "success"}>{device.bookingQueue.length ? "Queue" : "Borrow"}</Button>
+                        <Button
+                          color={device.bookingQueue.length ? "info" : "success"}
+                          onClick={() => this.toggleBookingModal(device.deviceId, category.slug)}
+                        >
+                          {device.bookingQueue.length ? "Queue" : "Borrow"}
+                        </Button>
                         <Button onClick={() => this.toggleModal(device.deviceId, category.slug)}>Info</Button>
                       </CardBody>
                     </Card>
@@ -184,6 +231,7 @@ export const categories = gql`
       name
       slug
       devices {
+        id
         deviceId
         deviceName
         os
