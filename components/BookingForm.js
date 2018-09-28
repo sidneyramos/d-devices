@@ -5,6 +5,7 @@ const addBooking = gql`
   mutation CreateBooking($borrowerName: String!, $borrowerEmail: String!) {
     createBooking(
       data: {
+        status: PUBLISHED
         borrowerName: $borrowerName
         borrowerEmail: $borrowerEmail
       }
