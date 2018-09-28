@@ -17,11 +17,6 @@ const App = ({ children, pathname }) => (
         line-height: 1.5;
         background-color: #f3f3f3;
       }
-      main {
-        max-width: 650px;
-        margin: 32px auto;
-        padding: 0 24px;
-      }
       a {
         color: deepskyblue;
         text-decoration: none;
