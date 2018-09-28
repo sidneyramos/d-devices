@@ -1,5 +1,8 @@
 import { Fragment } from 'react'
+import 'bootstrap/scss/bootstrap.scss';
 import Header from './Header'
+import '../styles/App.scss'
+
 
 const App = ({ children, pathname }) => (
   <Fragment>
@@ -7,25 +10,6 @@ const App = ({ children, pathname }) => (
     <main>
       {children}
     </main>
-    <style jsx global>{`
-      body {
-        font-family: 'Source Sans Pro', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.5;
-        background-color: #f3f3f3;
-      }
-      a {
-        color: deepskyblue;
-        text-decoration: none;
-      }
-      article {
-        margin: 0 auto;
-        max-width: 650px;
-      }
-    `}</style>
   </Fragment>
 )
 
