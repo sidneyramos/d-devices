@@ -27,6 +27,7 @@ import {
   Badge,
   Alert
 } from 'reactstrap';
+import BookingForm from './BookingForm.js';
 import '../styles/DeviceList.scss'
 
 
@@ -121,6 +122,7 @@ class DeviceList extends Component {
                         {modalDevice.notes}
                       </span>
                     </p>
+                    <BookingForm />
                   </ModalBody>
                   <ModalFooter>
                     <Button color="primary" onClick={this.toggleModal}>Borrow</Button>
