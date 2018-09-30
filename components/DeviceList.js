@@ -39,15 +39,19 @@ class DeviceList extends Component {
       modal: false,
       bookingModal: false,
       modalDevice: null,
+      categories: this.props.data.categories,
+      bookingSuccess: false,
     }
 
     this.toggleModal = this.toggleModal.bind(this);
     this.toggleBookingModal = this.toggleBookingModal.bind(this);
+    this.getDevice = this.getDevice.bind(this);
+    this.submitBooking = this.submitBooking.bind(this);
 
   }
 
-  toggleModal(id, categorySlug) {
-    const {categories} = this.props.data;
+  getDevice(id, categorySlug) {
+    const {categories} = this.state;
     let device;
 
     const category = categories.reduce((total,item) => {
@@ -66,38 +70,21 @@ class DeviceList extends Component {
         }
         return res;
       }, null);
-
     }
 
+    return device;
+  }
+
+  toggleModal(id, categorySlug) {
     this.setState({
       modal: !this.state.modal,
       bookingModal: false,
-      modalDevice: device,
+      modalDevice: this.getDevice(id, categorySlug),
     });
   }
 
   toggleBookingModal(id, categorySlug) {
-    const {categories} = this.props.data;
-    let device;
-
-    const category = categories.reduce((total,item) => {
-      let res = total;
-      if (item.slug === categorySlug) {
-        res = item;
-      }
-      return res;
-    }, null);
-
-    if (category) {
-      device = category.devices.reduce((total, item) => {
-        let res = total;
-        if (item.deviceId === id) {
-          res = item;
-        }
-        return res;
-      }, null);
-
-    }
+    const device = this.getDevice(id, categorySlug);
     this.setState({
       modal: false,
       bookingModal: !this.state.bookingModal,
@@ -105,12 +92,43 @@ class DeviceList extends Component {
     });
   }
 
+  submitBooking(deviceId, booking, categorySlug) {
+    this.setState((prevState) => {
+      let res = [...prevState.categories].map((category) => {
+        let newCategory = {...category};
+        if (newCategory.slug === categorySlug) {
+          newCategory.devices = newCategory.devices.map((device) => {
+            let newDevice = {...device};
+            if (device.id === deviceId) {
+              const bookingQueue = [...newDevice.bookingQueue];
+              bookingQueue.push(booking);
+              newDevice.bookingQueue = bookingQueue;
+            }
+            return newDevice;
+          })
+        }
+        return newCategory;
+      });
+
+      return {
+        categories: res,
+        bookingSuccess: true,
+      };
+    })
+
+    setTimeout(() => {
+      this.setState({
+        bookingSuccess: false,
+      })
+    }, 4000);
+  }
+
   render() {
-    const {loading, error, categories} = this.props.data;
+    const {loading, error } = this.props.data;
     if (error) return <h1>Error loading devices.</h1>
     if (!loading) {
+      const { modalDevice, categories} = this.state;
       console.log(categories)
-      const {modalDevice} = this.state;
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const currentBooking = modalDevice ? modalDevice.bookingQueue[0] : null;
       const bookingReturnDate = (currentBooking && currentBooking.expectedReturnDate) ? new Date(currentBooking.expectedReturnDate) : null;
@@ -122,7 +140,8 @@ class DeviceList extends Component {
                 <Fragment>
                   <ModalHeader>Borrow {modalDevice.deviceName}</ModalHeader>
                   <ModalBody>
-                    <BookingForm id={modalDevice.id} />
+                    {this.state.bookingSuccess && <Alert color="success">Successfully submitted booking</Alert>}
+                    <BookingForm device={modalDevice} submitBooking={this.submitBooking}/>
                   </ModalBody>
                 </Fragment>
               }
@@ -132,9 +151,7 @@ class DeviceList extends Component {
                 <Fragment>
                   <ModalHeader>{modalDevice.deviceName}</ModalHeader>
                   <ModalBody>
-                    <p>
-                      <Alert color="danger">Please do not update the OS of this device.</Alert>
-                    </p>
+                    <Alert color="danger">Please do not update the OS of this device.</Alert>
                     {
                       currentBooking &&
                       <p>
@@ -167,7 +184,7 @@ class DeviceList extends Component {
                     </p>
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="primary" onClick={() => this.toggleBookingModal(modalDevice.deviceId, modalDevice.category.name)}>Borrow</Button>
+                    <Button color="primary" onClick={() => this.toggleBookingModal(modalDevice.deviceId, modalDevice.category.slug)}>Borrow</Button>
                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                   </ModalFooter>
                 </Fragment>
@@ -241,6 +258,7 @@ export const categories = gql`
         systemAccount
       	category {
           name
+          slug
         }
         image {
           handle

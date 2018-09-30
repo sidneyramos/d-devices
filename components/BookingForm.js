@@ -10,7 +10,13 @@ import {
 } from 'reactstrap'
 
 const addBooking = gql`
-  mutation CreateBooking($deviceId: ID!, $borrowerName: String!, $borrowerEmail: String!, $borrowedDate: DateTime!, $expectedReturnDate: DateTime!) {
+  mutation CreateBooking($deviceId: ID!,
+    $borrowerName: String!,
+    $borrowerEmail: String!,
+    $borrowedDate: DateTime!,
+    $expectedReturnDate: DateTime!,
+    $notes: String!
+  ) {
     createBooking(
       data: {
         status: PUBLISHED
@@ -18,6 +24,7 @@ const addBooking = gql`
         borrowerEmail: $borrowerEmail
         borrowedDate: $borrowedDate
         expectedReturnDate: $expectedReturnDate
+        notes: $notes
         device: {
           connect: {
             id: $deviceId
@@ -25,15 +32,20 @@ const addBooking = gql`
         }
       }
     ) {
-      id
       borrowerName
       borrowerEmail
+      expectedReturnDate
+      notes
     }
   }
 `;
 
 const BookingForm = (props) => {
-  let borrowerNameInput, borrowerEmailInput, borrowedDateInput, expectedReturnDateInput;
+  let borrowerNameInput,
+      borrowerEmailInput,
+      borrowedDateInput,
+      notesInput,
+      expectedReturnDateInput;
   return (
     <Mutation mutation={addBooking}>
       {(addBooking, { data }) => (
@@ -45,30 +57,23 @@ const BookingForm = (props) => {
               borrowerEmail: borrowerEmailInput.value,
               borrowedDate: (new Date(borrowedDateInput.value)).toISOString(),
               expectedReturnDate: (new Date(expectedReturnDateInput.value)).toISOString(),
-              deviceId: props.id
+              notes: notesInput.value,
+              deviceId: props.device.id
             } }).then((res) => {
-              console.log(res);
+              // console.log(res);
+              props.submitBooking(props.device.id, res.data.createBooking, props.device.category.slug);
             });
             borrowerNameInput.value = "";
             borrowerEmailInput.value = "";
             borrowedDateInput.value = "";
             expectedReturnDateInput.value = "";
-
+            notesInput.value = "";
           }}
         >
-          {/*<input
-            ref={node => {
-              borrowerNameInput = node;
-            }}
-          />
-          <input
-            ref={node => {
-              borrowerEmailInput = node;
-            }}
-          />*/}
           <FormGroup>
             <Label for="borrowerNameInput">Name:</Label>
             <Input
+              required
               type="text"
               name="borrowerNameInput"
               id="borrowerNameInput"
@@ -80,6 +85,7 @@ const BookingForm = (props) => {
           <FormGroup>
             <Label for="borrowerEmailInput">Email:</Label>
             <Input
+              required
               type="text"
               name="borrowerEmailInput"
               id="borrowerEmailInput"
@@ -91,6 +97,7 @@ const BookingForm = (props) => {
           <FormGroup>
             <Label for="borrowedDateInput">Borrowed date:</Label>
             <Input
+              required
               type="date"
               name="borrowedDateInput"
               id="borrowedDateInput"
@@ -102,11 +109,23 @@ const BookingForm = (props) => {
           <FormGroup>
             <Label for="expectedReturnDateInput">Expected return date:</Label>
             <Input
+              required
               type="date"
               name="expectedReturnDateInput"
               id="expectedReturnDateInput"
               innerRef={node => {
                 expectedReturnDateInput = node;
+              }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="notesInput">Notes:</Label>
+            <Input
+              type="textarea"
+              name="notesInput"
+              id="notesInput"
+              innerRef={node => {
+                notesInput = node;
               }}
             />
           </FormGroup>
