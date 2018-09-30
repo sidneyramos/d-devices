@@ -10,12 +10,14 @@ import {
 } from 'reactstrap'
 
 const addBooking = gql`
-  mutation CreateBooking($borrowerName: String!, $borrowerEmail: String!, $deviceId: ID!) {
+  mutation CreateBooking($deviceId: ID!, $borrowerName: String!, $borrowerEmail: String!, $borrowedDate: DateTime!, $expectedReturnDate: DateTime!) {
     createBooking(
       data: {
         status: PUBLISHED
         borrowerName: $borrowerName
         borrowerEmail: $borrowerEmail
+        borrowedDate: $borrowedDate
+        expectedReturnDate: $expectedReturnDate
         device: {
           connect: {
             id: $deviceId
@@ -31,8 +33,7 @@ const addBooking = gql`
 `;
 
 const BookingForm = (props) => {
-  let borrowerNameInput, borrowerEmailInput;
-  console.log(props);
+  let borrowerNameInput, borrowerEmailInput, borrowedDateInput, expectedReturnDateInput;
   return (
     <Mutation mutation={addBooking}>
       {(addBooking, { data }) => (
@@ -42,10 +43,17 @@ const BookingForm = (props) => {
             addBooking({ variables: {
               borrowerName: borrowerNameInput.value,
               borrowerEmail: borrowerEmailInput.value,
+              borrowedDate: (new Date(borrowedDateInput.value)).toISOString(),
+              expectedReturnDate: (new Date(expectedReturnDateInput.value)).toISOString(),
               deviceId: props.id
-            } });
+            } }).then((res) => {
+              console.log(res);
+            });
             borrowerNameInput.value = "";
             borrowerEmailInput.value = "";
+            borrowedDateInput.value = "";
+            expectedReturnDateInput.value = "";
+
           }}
         >
           {/*<input
@@ -77,6 +85,28 @@ const BookingForm = (props) => {
               id="borrowerEmailInput"
               innerRef={node => {
                 borrowerEmailInput = node;
+              }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="borrowedDateInput">Borrowed date:</Label>
+            <Input
+              type="date"
+              name="borrowedDateInput"
+              id="borrowedDateInput"
+              innerRef={node => {
+                borrowedDateInput = node;
+              }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label for="expectedReturnDateInput">Expected return date:</Label>
+            <Input
+              type="date"
+              name="expectedReturnDateInput"
+              id="expectedReturnDateInput"
+              innerRef={node => {
+                expectedReturnDateInput = node;
               }}
             />
           </FormGroup>

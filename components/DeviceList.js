@@ -109,7 +109,7 @@ class DeviceList extends Component {
     const {loading, error, categories} = this.props.data;
     if (error) return <h1>Error loading devices.</h1>
     if (!loading) {
-      // console.log(categories)
+      console.log(categories)
       const {modalDevice} = this.state;
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const currentBooking = modalDevice ? modalDevice.bookingQueue[0] : null;
