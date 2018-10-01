@@ -6,7 +6,7 @@ This is a personal project by Sidney Ramos in order to streamline Deloitte Digit
 ## How to start
 1. Clone repository
 ```
-git clone https://github.com/sidneyramos/cufflink.git
+git clone https://github.com/sidneyramos/d-devices.git
 ```
 2. Install packages
 ```
