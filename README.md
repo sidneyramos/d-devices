@@ -1,5 +1,5 @@
-# Cufflink
-Traditional professional social networks lacks authenticity. Cufflink provides a personal and authentic way for professionals to discover and meet industry experts, and to seek mentorship before bridging their next career move.
+# Deloitte Device Register
+This is a personal project by Sidney Ramos in order to streamline Deloitte Digital Australia's device register system.
 
 # Made with Next.js & Apollo Client and GraphCMS
 
