@@ -28,6 +28,7 @@ import {
   Alert
 } from 'reactstrap';
 import BookingForm from './BookingForm.js';
+import DeviceCard from './DeviceCard.js';
 import '../styles/DeviceList.scss'
 
 
@@ -47,7 +48,6 @@ class DeviceList extends Component {
     this.toggleBookingModal = this.toggleBookingModal.bind(this);
     this.getDevice = this.getDevice.bind(this);
     this.submitBooking = this.submitBooking.bind(this);
-
   }
 
   getDevice(id, categorySlug) {
@@ -122,13 +122,21 @@ class DeviceList extends Component {
       })
     }, 4000);
   }
+  
+  componentDidUpdate() {
+    if (!this.state.categories) {
+      this.setState({
+        categories: this.props.data.categories,
+      })
+    }
+  }
 
   render() {
     const {loading, error } = this.props.data;
     if (error) return <h1>Error loading devices.</h1>
-    if (!loading) {
-      const { modalDevice, categories} = this.state;
-      console.log(categories)
+    
+    if (!loading && this.state.categories ) {
+      const { modalDevice, categories } = this.state;
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const currentBooking = modalDevice ? modalDevice.bookingQueue[0] : null;
       const bookingReturnDate = (currentBooking && currentBooking.expectedReturnDate) ? new Date(currentBooking.expectedReturnDate) : null;
@@ -197,39 +205,12 @@ class DeviceList extends Component {
                 </Col>
                 {category.devices.map(device =>
                   <Col md="4" className="mb-4">
-                    <Card>
-                      <CardImg top width="100%" src={device.image ?
-                        `https://media.graphcms.com/resize=w:350,h:500,fit:crop/${device.image.handle}` :
-                        "https://placeholdit.imgix.net/~text?txtsize=33&txt=350%C3%97500&w=350&h=500"}
-                        alt="Card image cap" />
-                      <CardBody>
-                        <CardTitle>{device.deviceName}</CardTitle>
-                        <CardSubtitle>
-                        {
-                          device.bookingQueue.length ?
-                          <Badge color="danger">Unavailable</Badge>
-                          :
-                          <Badge color="success">Available</Badge>
-                        }
-
-                        </CardSubtitle>
-                        <CardText>
-                          <p>
-                            <strong>Device No: </strong>{device.deviceId}
-                          </p>
-                          <p>
-                            <strong>Location: </strong>{device.location}
-                          </p>
-                        </CardText>
-                        <Button
-                          color={device.bookingQueue.length ? "info" : "success"}
-                          onClick={() => this.toggleBookingModal(device.deviceId, category.slug)}
-                        >
-                          {device.bookingQueue.length ? "Queue" : "Borrow"}
-                        </Button>
-                        <Button onClick={() => this.toggleModal(device.deviceId, category.slug)}>Info</Button>
-                      </CardBody>
-                    </Card>
+                    <DeviceCard 
+                      device={device} 
+                      toggleBookingModal={this.toggleBookingModal} 
+                      toggleModal={this.toggleModal} 
+                      category={category}
+                    />
                   </Col>
                 )}
               </Row>
@@ -237,8 +218,15 @@ class DeviceList extends Component {
           </Container>
         </Fragment>
       )
+      
+      // return <h2>Sample</h2>
     }
-    return <h2>Loading devices...</h2>
+    
+    return (
+      <Container>
+        <h2>Loading devices...</h2>
+      </Container>
+    );
   }
 }
 
