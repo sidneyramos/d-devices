@@ -19,6 +19,8 @@ import {
   Badge,
   Alert
 } from 'reactstrap';
+import Loader from 'react-loader';
+
 import AddDevice from './AddDevice.js';
 
 const categories = gql`
@@ -44,7 +46,10 @@ const DeviceForm = (props) => {
   }
   return (
     <Container>
-      <h2>Loading form...</h2>
+      <Loader loaded={false} lines={13} length={20} width={10} radius={20}
+        corners={1} rotate={0} direction={1} color="#000" speed={1}
+        trail={60} shadow={false} hwaccel={false} className="spinner"
+        zIndex={2e9} left="50%" scale={1.00} />
     </Container>
   );
 

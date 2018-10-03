@@ -27,6 +27,7 @@ import {
   Badge,
   Alert
 } from 'reactstrap';
+import Loader from 'react-loader';
 import BookingForm from './BookingForm.js';
 import DeviceCard from './DeviceCard.js';
 import '../styles/DeviceList.scss'
@@ -122,7 +123,7 @@ class DeviceList extends Component {
       })
     }, 4000);
   }
-  
+
   componentDidUpdate() {
     if (!this.state.categories) {
       this.setState({
@@ -134,7 +135,7 @@ class DeviceList extends Component {
   render() {
     const {loading, error } = this.props.data;
     if (error) return <h1>Error loading devices.</h1>
-    
+
     if (!loading && this.state.categories ) {
       const { modalDevice, categories } = this.state;
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -205,10 +206,10 @@ class DeviceList extends Component {
                 </Col>
                 {category.devices.map(device =>
                   <Col md="4" className="mb-4">
-                    <DeviceCard 
-                      device={device} 
-                      toggleBookingModal={this.toggleBookingModal} 
-                      toggleModal={this.toggleModal} 
+                    <DeviceCard
+                      device={device}
+                      toggleBookingModal={this.toggleBookingModal}
+                      toggleModal={this.toggleModal}
                       category={category}
                     />
                   </Col>
@@ -218,13 +219,16 @@ class DeviceList extends Component {
           </Container>
         </Fragment>
       )
-      
+
       // return <h2>Sample</h2>
     }
-    
+
     return (
       <Container>
-        <h2>Loading devices...</h2>
+      <Loader loaded={false} lines={13} length={20} width={10} radius={20}
+        corners={1} rotate={0} direction={1} color="#000" speed={1}
+        trail={60} shadow={false} hwaccel={false} className="spinner"
+        zIndex={2e9} left="50%" scale={1.00} />
       </Container>
     );
   }
