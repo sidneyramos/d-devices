@@ -9,6 +9,7 @@ import {
   FormText,
   Container
 } from 'reactstrap'
+import * as filestack from 'filestack-js';
 
 const addDevice = gql`
   mutation CreateDevice(
@@ -20,6 +21,7 @@ const addDevice = gql`
     $location: String!,
     $notes: String!,
     $categoryId: ID!,
+    $imageId: ID = "cjmt97ukuf0ry0993nb0x15uv"
   ) {
     createDevice(
       data: {
@@ -36,10 +38,35 @@ const addDevice = gql`
             id: $categoryId
           }
         }
+        image: {
+          connect: {
+            id: $imageId
+          }
+        }
       }
     ) {
       deviceId
       deviceName
+    }
+  }
+`;
+
+const uploadImage = gql`
+  mutation UploadImage(
+    $filename: String!
+    $handle: String!
+  ){
+    createAsset (
+      data: {
+        status: PUBLISHED,
+        fileName: $filename,
+        handle: $handle,
+        mimeType: "image/jpeg"
+      }
+    ) {
+      id
+      url
+      handle
     }
   }
 `;
@@ -50,71 +77,126 @@ const CreateDevice = (props) => {
   // https://www.filestackapi.com/api/store/S3?key=AJOHJ7rYLSGO94Rs83uoFz&path=/9b8d7803f3694b7a93a7978523b5c4a8-master/
   let input = {};
 
+  const handleUploadImage = (gqlUploadImage) => {
+      const client = filestack.init('AJOHJ7rYLSGO94Rs83uoFz');
+
+      const resPromise = new Promise((resolve, reject) => {
+        if (input['image'].files[0]) {
+          client.upload(
+            input['image'].files[0],
+            {},
+            {
+              filename: `${input["deviceName"].value.toLowerCase().replace(" ", '-')}-${input["deviceId"].value}`,
+              path: "/9b8d7803f3694b7a93a7978523b5c4a8-master/"
+            },
+            {})
+            .then(res => {
+              console.log('UPLOAD TO FILESTACK SUCCESS: ', res)
+              gqlUploadImage({ variables: {
+                filename: res.filename,
+                handle: res.handle,
+              } }).then((result) => {
+                console.log('LINK TO GRAPHCMS SUCCESS: ', result.data.createAsset.id);
+                resolve(result.data.createAsset.id);
+              });
+            })
+            .catch(err => {
+              console.log(err)
+            });
+        } else {
+          resolve(null);
+        }
+      });
+
+      return resPromise;
+    }
+
   return (
     <Mutation mutation={addDevice}>
-      {(addDevice, { data }) => (
-        <Form
-          onSubmit={e => {
-            e.preventDefault();
-            addDevice({ variables: {
-              deviceId: input["deviceId"].value,
-              deviceName: input["deviceName"].value,
-              os: input["os"].value,
-              systemAccount: input["systemAccount"].value,
-              passcode: input["passcode"].value,
-              location: input["location"].value,
-              notes: input["notes"].value,
-              categoryId: input["categoryId"].value
-              // deviceId: props.device.id
-            } }).then((res) => {
-              // console.log(res);
-              // props.submitBooking(props.device.id, res.data.createBooking, props.device.category.slug);
-            });
-            deviceIdInput.value = "";
-            deviceNameInput.value = "";
-            osInput.value = "";
-            systemAccountInput.value = "";
-            passcodeInput.value = "";
-            locationInput.value = "";
-            notesInput.value = "";
-          }}
-        >
-          {
-            ["deviceId", "deviceName", "os", "systemAccount", "passcode", "location", "notes"].map((item) => {
-                const name = item.replace(/([a-z])([A-Z])/g, '$1 $2');
-                return (
-                  <FormGroup>
-                    <Label for={`${item}Input`}>{`${name[0].toUpperCase()}${name.slice(1)}`}</Label>
-                    <Input
-                      required={!item === "notes"}
-                      type={item === "deviceId" ? "number" : (item === "notes" ? "textarea" : "text")}
-                      name={`${item}Input`}
-                      id={`${item}Input`}
-                      innerRef={node => {
-                        input[item] = node;
-                      }}
-                    />
-                  </FormGroup>
-                );
-              }
-            )
-          }
-          <FormGroup>
-           <Label for="categorySelect">Category</Label>
-           <Input
-             required
-             type="select"
-             name="select"
-             id="categorySelect"
-             innerRef={node => {
-               input["categoryId"] = node;
-             }}
-             >
-             {props.categories.map((item) => <option value={item.id}>{item.name}</option>)}
-           </Input>
-          </FormGroup>
-          <Button type="submit">Add Booking</Button>
-        </Form>
+      {(addDevice, { addDeviceData }) => (
+        <Mutation mutation={uploadImage}>
+        {(uploadImage, { uploadImageData }) => (
+          <Form
+            onSubmit={e => {
+              e.preventDefault();
+              handleUploadImage(uploadImage)
+                .then((res) => {
+                  console.log("Upload Image: ", res);
+                  addDevice({ variables: {
+                    deviceId: input["deviceId"].value,
+                    deviceName: input["deviceName"].value,
+                    os: input["os"].value,
+                    systemAccount: input["systemAccount"].value,
+                    passcode: input["passcode"].value,
+                    location: input["location"].value,
+                    notes: input["notes"].value,
+                    categoryId: input["categoryId"].value,
+                    imageId: res || "cjmt97ukuf0ry0993nb0x15uv"
+                  } }).then((result) => {
+                    console.log("Add Device: ", result);
+                    input["deviceId"].value = "";
+                    input["deviceName"].value = "";
+                    input["os"].value = "";
+                    input["systemAccount"].value = "";
+                    input["passcode"].value = "";
+                    input["location"].value = "";
+                    input["notes"].value = "";
+                    input["categoryId"].value = "";
+                    input["image"].value = "";
+                  });
+                });
+            }}
+          >
+            {
+              ["deviceId", "deviceName", "os", "systemAccount", "passcode", "location", "notes"].map((item) => {
+                  const name = item.replace(/([a-z])([A-Z])/g, '$1 $2');
+                  return (
+                    <FormGroup>
+                      <Label for={`${item}Input`}>{`${name[0].toUpperCase()}${name.slice(1)}`}</Label>
+                      <Input
+                        required={!item === "notes"}
+                        type={item === "deviceId" ? "number" : (item === "notes" ? "textarea" : "text")}
+                        name={`${item}Input`}
+                        id={`${item}Input`}
+                        innerRef={node => {
+                          input[item] = node;
+                        }}
+                      />
+                    </FormGroup>
+                  );
+                }
+              )
+            }
+            <FormGroup>
+             <Label for="categorySelect">Category</Label>
+             <Input
+               required
+               type="select"
+               name="categorySelect"
+               id="categorySelect"
+               innerRef={node => {
+                 input["categoryId"] = node;
+               }}
+               >
+               {props.categories.map((item) => <option value={item.id}>{item.name}</option>)}
+             </Input>
+            </FormGroup>
+
+            <FormGroup>
+             <Label for="imageUpload">Image</Label>
+             <Input
+               type="file"
+               name="imageUpload"
+               id="imageUpload"
+               innerRef={node => {
+                 input["image"] = node;
+               }}
+               />
+            </FormGroup>
+            <Button type="submit">Add Booking</Button>
+          </Form>
+        )}
+        </Mutation>
       )}
     </Mutation>
   );
