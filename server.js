@@ -10,6 +10,10 @@ app.prepare()
 .then(() => {
   const server = express()
 
+  server.get('/category/add', (req, res) => {
+    app.render(req, res, '/add-category')
+  })
+
   server.get('*', (req, res) => {
     return handle(req, res)
   })

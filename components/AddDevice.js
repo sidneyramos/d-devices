@@ -193,7 +193,7 @@ const CreateDevice = (props) => {
                }}
                />
             </FormGroup>
-            <Button type="submit">Add Booking</Button>
+            <Button type="submit">Add Device</Button>
           </Form>
         )}
         </Mutation>

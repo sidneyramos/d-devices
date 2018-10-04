@@ -20,6 +20,7 @@ import {
   Alert
 } from 'reactstrap';
 import Loader from 'react-loader';
+import '../styles/DeviceForm.scss'
 
 import AddDevice from './AddDevice.js';
 
@@ -39,7 +40,7 @@ const DeviceForm = (props) => {
 
   if (!loading) {
     return (
-      <Container>
+      <Container className="device-form">
         <AddDevice categories={categories}/>
       </Container>
     );
