@@ -3,8 +3,8 @@ import '../styles/Header.scss'
 
 const Header = ({ pathname }) => (
   <header>
-    <title>Sample</title>
-    <h1 className="site-title">Sample</h1>
+    <title>D.Devices</title>
+    <h1 className="site-title">D<span class="d-dot" />Devices</h1>
     <nav>
       <Link href='/'>
         <a className={pathname === '/' && 'is-active'}>

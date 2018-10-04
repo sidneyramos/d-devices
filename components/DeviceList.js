@@ -30,6 +30,8 @@ import {
 import Loader from 'react-loader';
 import BookingForm from './BookingForm.js';
 import DeviceCard from './DeviceCard.js';
+import Filter from './Filter.js';
+
 import '../styles/DeviceList.scss'
 
 
@@ -199,6 +201,7 @@ class DeviceList extends Component {
                 </Fragment>
                 }
             </Modal>
+            <Filter /> 
             {categories.map((category) =>
               <Row>
                 <Col md="12">

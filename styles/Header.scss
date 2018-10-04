@@ -24,4 +24,15 @@ header {
     -moz-osx-font-smoothing: grayscale;
     font-size: 40px;
   }
+
+  .d-dot {
+    background-color: #78b509;
+    width: 10px;
+    height: 10px;
+    display: inline-flex;
+    border-radius: 50%;
+    margin-right: 5px;
+    margin-left: 2px;
+
+  }
 }
