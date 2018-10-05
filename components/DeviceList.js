@@ -43,7 +43,7 @@ class DeviceList extends Component {
       modal: false,
       bookingModal: false,
       modalDevice: null,
-      categories: this.props.data.categories,
+      results: this.props.data.categories,
       bookingSuccess: false,
     }
 
@@ -51,13 +51,15 @@ class DeviceList extends Component {
     this.toggleBookingModal = this.toggleBookingModal.bind(this);
     this.getDevice = this.getDevice.bind(this);
     this.submitBooking = this.submitBooking.bind(this);
+    this.filterResults = this.filterResults.bind(this);
+
   }
 
   getDevice(id, categorySlug) {
-    const {categories} = this.state;
+    const {results} = this.state;
     let device;
 
-    const category = categories.reduce((total,item) => {
+    const category = results.reduce((total,item) => {
       let res = total;
       if (item.slug === categorySlug) {
         res = item;
@@ -97,7 +99,7 @@ class DeviceList extends Component {
 
   submitBooking(deviceId, booking, categorySlug) {
     this.setState((prevState) => {
-      let res = [...prevState.categories].map((category) => {
+      let res = [...prevState.results].map((category) => {
         let newCategory = {...category};
         if (newCategory.slug === categorySlug) {
           newCategory.devices = newCategory.devices.map((device) => {
@@ -114,7 +116,7 @@ class DeviceList extends Component {
       });
 
       return {
-        categories: res,
+        results: res,
         bookingSuccess: true,
       };
     })
@@ -126,10 +128,16 @@ class DeviceList extends Component {
     }, 4000);
   }
 
+  filterResults(results) {
+    this.setState({
+      results: results,
+    });
+  }
+
   componentDidUpdate() {
-    if (!this.state.categories) {
+    if (!this.state.results) {
       this.setState({
-        categories: this.props.data.categories,
+        results: this.props.data.categories,
       })
     }
   }
@@ -138,8 +146,8 @@ class DeviceList extends Component {
     const {loading, error } = this.props.data;
     if (error) return <h1>Error loading devices.</h1>
 
-    if (!loading && this.state.categories ) {
-      const { modalDevice, categories } = this.state;
+    if (!loading && this.state.results ) {
+      const { modalDevice, results } = this.state;
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const currentBooking = modalDevice ? modalDevice.bookingQueue[0] : null;
       const bookingReturnDate = (currentBooking && currentBooking.expectedReturnDate) ? new Date(currentBooking.expectedReturnDate) : null;
@@ -201,8 +209,8 @@ class DeviceList extends Component {
                 </Fragment>
                 }
             </Modal>
-            <Filter /> 
-            {categories.map((category) =>
+            <Filter categories={this.props.data.categories} filterResults={this.filterResults}/>
+            {results && results.map((category) =>
               <Row>
                 <Col md="12">
                   <h3>{category.name}</h3>
@@ -217,6 +225,13 @@ class DeviceList extends Component {
                     />
                   </Col>
                 )}
+                {
+                  !category.devices.length &&
+                  <Col md="12">
+                    <p>Your search did not return any results.</p>
+                  </Col>
+                }
+
               </Row>
             )}
           </Container>

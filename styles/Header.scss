@@ -13,10 +13,16 @@ header {
   a {
     font-size: 18px;
     margin-right: 16px;
+    color: #78b509;
+
+    &:hover {
+      color: #5e8d07;
+      text-decoration: initial;
+    }
   }
   .is-active {
     font-weight: bold;
-    text-decoration: underline;
+    text-decoration: initial;
   }
   .site-title {
     font-family: 'Source Sans Pro', sans-serif;
