@@ -7,8 +7,8 @@ const Header = ({ pathname }) => (
     <Head>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="utf-8" />
+      <title>D.Devices</title>
     </Head>
-    <title>D.Devices</title>
     <h1 className="site-title">D<span class="d-dot" />Devices</h1>
     <nav>
       <a href='/'className={pathname === '/' && 'is-active'}>
