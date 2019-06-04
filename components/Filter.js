@@ -114,7 +114,6 @@ class Filter extends Component {
     const {loading, error } = this.props.data;
 
     const input = {};
-    console.log(this.props.data.devices)
 
     if (!loading && this.props.data.devices) {
       const locations = this.props.data.devices.reduce((total, item) => {

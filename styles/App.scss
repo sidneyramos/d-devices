@@ -7,8 +7,13 @@ body {
   background-color: #f3f3f3;
 }
 a {
-  color: deepskyblue;
-  text-decoration: none;
+    color: #78b509;
+    text-decoration: none;
+
+    &:hover {
+      color: #5e8d07;
+      text-decoration: none;
+    }
 }
 article {
   margin: 0 auto;

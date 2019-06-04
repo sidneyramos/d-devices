@@ -1,8 +1,13 @@
 import Link from 'next/link'
+import Head from 'next/head'
 import '../styles/Header.scss'
 
 const Header = ({ pathname }) => (
   <header>
+    <Head>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta charSet="utf-8" />
+    </Head>
     <title>D.Devices</title>
     <h1 className="site-title">D<span class="d-dot" />Devices</h1>
     <nav>

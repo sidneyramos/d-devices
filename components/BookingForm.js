@@ -60,7 +60,6 @@ const BookingForm = (props) => {
               notes: notesInput.value,
               deviceId: props.device.id
             } }).then((res) => {
-              // console.log(res);
               props.submitBooking(props.device.id, res.data.createBooking, props.device.category.slug);
             });
             borrowerNameInput.value = "";

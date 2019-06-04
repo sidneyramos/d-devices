@@ -151,6 +151,7 @@ class DeviceList extends Component {
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const currentBooking = modalDevice ? modalDevice.bookingQueue[0] : null;
       const bookingReturnDate = (currentBooking && currentBooking.expectedReturnDate) ? new Date(currentBooking.expectedReturnDate) : null;
+
       return (
         <Fragment>
           <Container className="device-list">
@@ -160,6 +161,20 @@ class DeviceList extends Component {
                   <ModalHeader>Borrow {modalDevice.deviceName}</ModalHeader>
                   <ModalBody>
                     {this.state.bookingSuccess && <Alert color="success">Successfully submitted booking</Alert>}
+                    {!!modalDevice.bookingQueue.length &&
+                      <Alert color="warning">
+                        <p><strong>Current booking queue: </strong></p>
+                        {modalDevice.bookingQueue.map(item => {
+                          const returnDate = item.expectedReturnDate ? new Date(item.expectedReturnDate) : null;
+                          const bookingDate = returnDate ? `${returnDate.getDate()} ${months[returnDate.getMonth()]} ${returnDate.getFullYear()}` : null;
+                          return (
+                            <Fragment>
+                              <p>{item.borrowerEmail ? <a href={`mailto:${item.borrowerEmail}`}>{item.borrowerName}</a> : item.borrowerName}{bookingDate && ` - ${bookingDate}`}</p>
+                            </Fragment>
+                          );
+                        })}
+                      </Alert>
+                    }
                     <BookingForm device={modalDevice} submitBooking={this.submitBooking}/>
                   </ModalBody>
                 </Fragment>
@@ -203,7 +218,7 @@ class DeviceList extends Component {
                     </p>
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="primary" onClick={() => this.toggleBookingModal(modalDevice.deviceId, modalDevice.category.slug)}>Borrow</Button>
+                  <Button color={modalDevice.bookingQueue.length ? "info" : "success"} onClick={() => this.toggleBookingModal(modalDevice.deviceId, modalDevice.category.slug)}>{modalDevice.bookingQueue.length ? "Queue" : "Borrow"}</Button>
                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                   </ModalFooter>
                 </Fragment>
@@ -275,6 +290,7 @@ export const categories = gql`
         }
         bookingQueue {
           borrowerName
+          borrowerEmail
           expectedReturnDate
           notes
         }

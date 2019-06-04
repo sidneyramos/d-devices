@@ -101,12 +101,10 @@ class CreateDevice extends Component {
               },
               {})
               .then(res => {
-                console.log('UPLOAD TO FILESTACK SUCCESS: ', res)
                 gqlUploadImage({ variables: {
                   filename: res.filename,
                   handle: res.handle,
                 } }).then((result) => {
-                  console.log('LINK TO GRAPHCMS SUCCESS: ', result.data.createAsset.id);
                   resolve(result.data.createAsset.id);
                 });
               })
@@ -131,7 +129,6 @@ class CreateDevice extends Component {
                 e.preventDefault();
                 handleUploadImage(uploadImage)
                   .then((res) => {
-                    console.log("Upload Image: ", res);
                     addDevice({ variables: {
                       deviceId: input["deviceId"].value,
                       deviceName: input["deviceName"].value,
@@ -143,7 +140,6 @@ class CreateDevice extends Component {
                       categoryId: input["categoryId"].value,
                       imageId: res || "cjmt97ukuf0ry0993nb0x15uv"
                     } }).then((result) => {
-                      console.log("Add Device: ", result);
                       input["deviceId"].value = "";
                       input["deviceName"].value = "";
                       input["os"].value = "";
