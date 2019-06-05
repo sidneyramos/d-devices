@@ -155,7 +155,7 @@ class CreateDevice extends Component {
             >
               {
                 ["deviceId", "deviceName", "os", "systemAccount", "passcode", "location", "notes"].map((item) => {
-                    const name = item.replace(/([a-z])([A-Z])/g, '$1 $2');
+                  const name = item === 'deviceId' ? "Device ID" : (item === 'os' ? 'Operating System' : item.replace(/([a-z])([A-Z])/g, '$1 $2'));
                     return (
                       <FormGroup>
                         <Label for={`${item}Input`}>{`${name[0].toUpperCase()}${name.slice(1)}`}</Label>
