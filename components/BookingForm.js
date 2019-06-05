@@ -128,7 +128,7 @@ const BookingForm = (props) => {
               }}
             />
           </FormGroup>
-          <Button type="submit">Add Booking</Button>
+          <Button color="success" type="submit">Add Booking</Button>
         </Form>
       )}
     </Mutation>
