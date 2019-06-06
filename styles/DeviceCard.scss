@@ -1,0 +1,9 @@
+.device-card {
+    flex-direction: row;
+
+    .device-image {
+        width: 40%;
+        height: 100%;
+        display: flex;
+    }
+}

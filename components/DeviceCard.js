@@ -16,10 +16,14 @@ import {
   Badge,
   Alert
 } from 'reactstrap';
+import '../styles/DeviceCard.scss'
+
 
 const DeviceCard = ({ device, toggleModal, toggleBookingModal, category }) => (
-  <Card>
-    <CardImg top width="100%" src={device.image ?
+  <Card
+    className="device-card"
+    >
+    <CardImg className="device-image" top src={device.image ?
       `https://media.graphcms.com/resize=w:350,h:500,fit:crop/${device.image.handle}` :
       "https://placeholdit.imgix.net/~text?txtsize=33&txt=350%C3%97500&w=350&h=500"}
       alt="Card image cap" />

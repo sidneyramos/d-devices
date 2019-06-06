@@ -228,7 +228,7 @@ class DeviceList extends Component {
             {results && results.map((category) =>
               <Row>
                 <Col md="12">
-                  <h3>{category.name}</h3>
+                  <h3 className="category-title">{category.name}</h3>
                 </Col>
                 {category.devices.map(device =>
                   <Col md="4" className="mb-4">

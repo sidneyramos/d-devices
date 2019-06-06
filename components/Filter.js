@@ -146,62 +146,67 @@ class Filter extends Component {
             }
           }}
         >
-          <Row>
-            <Col md={4}>
-              <FormGroup>
-               <Label for="categorySelect">Category</Label>
-               <Input
-                 type="select"
-                 name="categorySelect"
-                 id="categorySelect"
-                 innerRef={node => {
-                   input["category"] = node;
-                 }}
-                 >
-                   <option value="">-</option>
+          <Container
+            className="filter-list">
+            <Row>
+              <Col md={12}>
+                <h2>Filter by</h2>
+              </Col>
+              <Col md={4}>
+                <FormGroup>
+                <Label for="categorySelect">Device Type</Label>
+                <Input
+                  type="select"
+                  name="categorySelect"
+                  id="categorySelect"
+                  innerRef={node => {
+                    input["category"] = node;
+                  }}
+                  >
+                    <option value="">All</option>
+                    {
+                      this.props.categories.map((category) => <option value={category.slug}>{category.name}</option>)
+                    }
+                </Input>
+                </FormGroup>
+              </Col>
+              <Col md={4}>
+                <FormGroup>
+                  <Label for="locationSelect">Location</Label>
+                  <Input
+                  type="select"
+                  name="locationSelect"
+                  id="locationSelect"
+                  innerRef={node => {
+                    input["location"] = node;
+                  }}
+                  >
+                  <option value="">All</option>
                   {
-                    this.props.categories.map((category) => <option value={category.slug}>{category.name}</option>)
+                    locations.map((location) => <option value={location}>{location}</option>)
                   }
-               </Input>
-              </FormGroup>
-            </Col>
-            <Col md={4}>
-              <FormGroup>
-                <Label for="locationSelect">Location</Label>
-                <Input
-                type="select"
-                name="locationSelect"
-                id="locationSelect"
-                innerRef={node => {
-                  input["location"] = node;
-                }}
-                >
-                <option value="">-</option>
-                {
-                  locations.map((location) => <option value={location}>{location}</option>)
-                }
-                </Input>
-              </FormGroup>
-            </Col>
-            <Col md={4}>
-              <FormGroup>
-                <Label for="availabilitySelect">Availability</Label>
-                <Input
-                type="select"
-                name="availabilitySelect"
-                id="availabilitySelect"
-                innerRef={node => {
-                  input["availability"] = node;
-                }}
-                >
-                  <option value="">-</option>
-                  <option value="available">Available</option>
-                  <option value="unavailable">Unavailable</option>
-                </Input>
-              </FormGroup>
-            </Col>
-          </Row>
-
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col md={4}>
+                <FormGroup>
+                  <Label for="availabilitySelect">Availability</Label>
+                  <Input
+                  type="select"
+                  name="availabilitySelect"
+                  id="availabilitySelect"
+                  innerRef={node => {
+                    input["availability"] = node;
+                  }}
+                  >
+                    <option value="">All</option>
+                    <option value="available">Available</option>
+                    <option value="unavailable">Unavailable</option>
+                  </Input>
+                </FormGroup>
+              </Col>
+            </Row>
+          </Container>
         </Form>
       );
     }

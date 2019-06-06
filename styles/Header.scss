@@ -1,15 +1,16 @@
 header {
-  padding: 24px 32px;
+  // padding: 24px 32px;
   margin-bottom: 32px;
   text-align: center;
+
+  .bg-dark {
+    background-color: black !important;
+  }
 
   h1 {
     font-weight: 100;
   }
-  nav {
-    max-width: 650px;
-    margin: 0 auto;
-  }
+
   a {
     font-size: 18px;
     margin-right: 16px;
@@ -20,24 +21,57 @@ header {
       text-decoration: initial;
     }
   }
+
+  .navbar-dark {
+    .navbar-nav {
+      .is-active {
+        font-weight: bold;
+        text-decoration: initial;
+        border-bottom: 4px solid #78b509;
+
+        .nav-link {
+          color: #78b509;
+        }
+      }
+
+      .nav-link {
+        color: white;
+        padding: 1rem;
+        margin:0;
+      }
+
+      .nav-item {
+        text-align: center;
+      }
+    }
+  }
+
+  .navbar {
+    padding: 0 2rem;
+  }
+
   .is-active {
     font-weight: bold;
     text-decoration: initial;
+    border-bottom: 4px solid #78b509;
+    .nav-link {
+      color: #78b509;
+    }
   }
   .site-title {
     font-family: 'Source Sans Pro', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 40px;
+    font-size: 24px;
   }
 
   .d-dot {
     background-color: #78b509;
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
     display: inline-flex;
     border-radius: 50%;
-    margin-right: 5px;
+    margin-right: 2px;
     margin-left: 2px;
 
   }
