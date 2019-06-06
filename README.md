@@ -1,5 +1,5 @@
 # Deloitte Device Register
-This is a personal project by Sidney Ramos in order to streamline Deloitte Digital Australia's device register system.
+This is a personal project by Sidney Ramos (feat. Karen Huang's design) in order to streamline Deloitte Digital Australia's device register system.
 
 # Made with Next.js & Apollo Client and GraphCMS
 

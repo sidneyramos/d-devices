@@ -48,7 +48,7 @@ class Header extends Component {
           <title>D.Devices</title>
         </Head>
         <Navbar color="dark" dark expand="md">
-          <NavbarBrand className="site-title" href="/">D<span class="d-dot" />Devices</NavbarBrand>
+          <NavbarBrand className="site-title" href="/">D<span className="d-dot" />Devices</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>

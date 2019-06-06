@@ -6,9 +6,9 @@
   "author": "Sidney Ramos",
   "license": "MIT",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next start",
     "deploy": "now --public && now alias",
     "lint": "standard"
   },
@@ -43,11 +43,11 @@
     "styled-jsx-css-loader": "^0.3.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.0.2",
+    "@babel/core": "^7.4.5",
+    "babel-eslint": "^8.2.6",
     "node-sass": "^4.9.3",
     "standard": "^10.0.3",
     "styled-jsx-plugin-sass": "^0.2.4",
-    "@babel/core": "^7.2.2",
     "webpack": "4.28.4"
   },
   "standard": {
