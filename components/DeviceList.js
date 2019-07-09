@@ -159,24 +159,30 @@ class DeviceList extends Component {
               { modalDevice &&
                 <Fragment>
                   <ModalHeader>Borrow {modalDevice.deviceName}</ModalHeader>
-                  <ModalBody>
-                    {this.state.bookingSuccess && <Alert color="success">Successfully submitted booking</Alert>}
-                    {!!modalDevice.bookingQueue.length &&
-                      <Alert color="warning">
-                        <p><strong>Current booking queue: </strong></p>
-                        {modalDevice.bookingQueue.map(item => {
-                          const returnDate = item.expectedReturnDate ? new Date(item.expectedReturnDate) : null;
-                          const bookingDate = returnDate ? `${returnDate.getDate()} ${months[returnDate.getMonth()]} ${returnDate.getFullYear()}` : null;
-                          return (
-                            <Fragment>
-                              <p>{item.borrowerEmail ? <a href={`mailto:${item.borrowerEmail}`}>{item.borrowerName}</a> : item.borrowerName}{bookingDate && ` - ${bookingDate}`}</p>
-                            </Fragment>
-                          );
-                        })}
-                      </Alert>
+                  <BookingForm 
+                    device={modalDevice} 
+                    submitBooking={this.submitBooking}
+                    toggleBookingModal={this.toggleBookingModal}
+                    headerChildren={
+                      <Fragment>
+                        {this.state.bookingSuccess && <Alert color="success">Successfully submitted booking</Alert>}
+                        {!!modalDevice.bookingQueue.length &&
+                          <Alert color="warning">
+                            <p><strong>Current booking queue: </strong></p>
+                            {modalDevice.bookingQueue.map(item => {
+                              const returnDate = item.expectedReturnDate ? new Date(item.expectedReturnDate) : null;
+                              const bookingDate = returnDate ? `${returnDate.getDate()} ${months[returnDate.getMonth()]} ${returnDate.getFullYear()}` : null;
+                              return (
+                                <Fragment>
+                                  <p>{item.borrowerEmail ? <a href={`mailto:${item.borrowerEmail}`}>{item.borrowerName}</a> : item.borrowerName}{bookingDate && ` - ${bookingDate}`}</p>
+                                </Fragment>
+                              );
+                            })}
+                          </Alert>
+                        }
+                      </Fragment>
                     }
-                    <BookingForm device={modalDevice} submitBooking={this.submitBooking}/>
-                  </ModalBody>
+                  />
                 </Fragment>
               }
             </Modal>
@@ -218,7 +224,7 @@ class DeviceList extends Component {
                     </p>
                   </ModalBody>
                   <ModalFooter>
-                  <Button color={modalDevice.bookingQueue.length ? "info" : "success"} onClick={() => this.toggleBookingModal(modalDevice.deviceId, modalDevice.category.slug)}>{modalDevice.bookingQueue.length ? "Queue" : "Borrow"}</Button>
+                    <Button color={modalDevice.bookingQueue.length ? "info" : "success"} onClick={() => this.toggleBookingModal(modalDevice.deviceId, modalDevice.category.slug)}>{modalDevice.bookingQueue.length ? "Queue" : "Borrow"}</Button>
                     <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
                   </ModalFooter>
                 </Fragment>

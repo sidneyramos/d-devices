@@ -1,9 +1,53 @@
 .device-card {
     flex-direction: row;
+    height: 100%;
+    cursor: pointer;
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-subtitle {
+        flex: 1 1 0;
+        margin-bottom: 1rem;
+    }
 
     .device-image {
-        width: 40%;
         height: 100%;
         display: flex;
+        background-size: cover;
+        flex: 0 0 35%;
+    }
+
+    .badge {
+        margin-right: 0.2rem;
+        margin-bottom: 0.2rem;
+        border-radius: 0;
+        font-weight: 500;
+        font-size: 14px;
+
+        &.badge-light {
+            background-color: #f1f1f1;
+            color: #6C757D;
+        }
+    }
+
+    .status {
+        font-weight: 600;
+        font-size: 12px;
+        margin-bottom: 0.5rem;
+
+        &.unavailable {
+            color: #dc3545;
+        }
+
+        &.available {
+            color: #28a745;
+        }
+    }
+
+    .booking-button {
+        z-index: 1;
     }
 }

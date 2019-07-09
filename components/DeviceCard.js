@@ -16,45 +16,70 @@ import {
   Badge,
   Alert
 } from 'reactstrap';
+import classNames from 'classnames'
 import '../styles/DeviceCard.scss'
 
 
-const DeviceCard = ({ device, toggleModal, toggleBookingModal, category }) => (
-  <Card
-    className="device-card"
-    >
-    <CardImg className="device-image" top src={device.image ?
-      `https://media.graphcms.com/resize=w:350,h:500,fit:crop/${device.image.handle}` :
-      "https://placeholdit.imgix.net/~text?txtsize=33&txt=350%C3%97500&w=350&h=500"}
-      alt="Card image cap" />
-    <CardBody>
-      <CardTitle>{device.deviceName}</CardTitle>
-      <CardSubtitle>
-      {
-        device.bookingQueue.length ?
-        <Badge color="danger">Unavailable</Badge>
-        :
-        <Badge color="success">Available</Badge>
-      }
+const DeviceCard = ({ device, toggleModal, toggleBookingModal, category }) => {
+  const { bookingQueue } = device;
+  const currentBooking = device ? device.bookingQueue[0] : null;
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];  
+  const bookingReturnDate = (currentBooking && currentBooking.expectedReturnDate) ? new Date(currentBooking.expectedReturnDate) : null;
+  const unavailableText = bookingReturnDate ? `Unavailable until ${bookingReturnDate.getDate()} ${months[bookingReturnDate.getMonth()]} ${bookingReturnDate.getFullYear()}` : `Unavailable - no return date specified. Contact admin for help.`;
 
-      </CardSubtitle>
-      <CardText>
-        <p>
-          <strong>Device No: </strong>{device.deviceId}
-        </p>
-        <p>
-          <strong>Location: </strong>{device.location}
-        </p>
-      </CardText>
-      <Button
-        color={device.bookingQueue.length ? "info" : "success"}
-        onClick={() => toggleBookingModal(device.deviceId, category.slug)}
+  const handleClick = (e) => {
+    if (e.target.name === 'booking-button') {
+      e.preventDefault();
+      e.stopPropagation();
+    } else {
+      toggleModal(device.deviceId, category.slug)
+    }
+  }
+
+  return (
+    <Card
+      className="device-card"
+      onClick={handleClick}
       >
-        {device.bookingQueue.length ? "Queue" : "Borrow"}
-      </Button>
-      <Button onClick={() => toggleModal(device.deviceId, category.slug)}>Info</Button>
-    </CardBody>
-  </Card>
-)
+      <div
+        className="device-image"
+        style={{
+          backgroundImage: `url(${device.image ?
+            `https://media.graphcms.com/resize=w:350,h:500,fit:crop/${device.image.handle}` :
+            "https://placeholdit.imgix.net/~text?txtsize=33&txt=350%C3%97400&w=350&h=400"})`
+        }}
+      />
+      <CardBody>
+        <CardTitle>{device.deviceName}</CardTitle>
+        <CardSubtitle>
+          <Badge color="light">{device.os}</Badge>
+          <Badge color="light">#{device.deviceId}</Badge>
+          <Badge color="light">{device.location}</Badge>
+        </CardSubtitle>
+        {/*<CardText>
+          <p>
+            <strong>Device No: </strong>{device.deviceId}
+          </p>
+          <p>
+            <strong>Location: </strong>{device.location}
+          </p>
+      </CardText>*/}
+        <p className={classNames('status', {
+          'available': !bookingQueue.length,
+          'unavailable': bookingQueue.length
+        })}>{bookingQueue.length ? unavailableText : "Available"}</p>
+        <Button
+          color={bookingQueue.length ? "info" : "success"}
+          name="booking-button"
+          onClick={() => toggleBookingModal(device.deviceId, category.slug)}
+          className="booking-button"
+        >
+          {bookingQueue.length ? "Queue" : "Borrow"}
+        </Button>
+        {/* <Button onClick={() => toggleModal(device.deviceId, category.slug)}>Info</Button> */}
+      </CardBody>
+    </Card>
+  );
+}
 
 export default DeviceCard

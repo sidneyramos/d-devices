@@ -53,7 +53,7 @@ class Header extends Component {
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem
-                className={pathname === '/' && 'is-active'}
+                className={pathname === '/' ? 'is-active' : ''}
               >
                 <NavLink
                   href="/"
@@ -62,7 +62,7 @@ class Header extends Component {
                 </NavLink>
               </NavItem>
               <NavItem
-                className={pathname === '/add-device' && 'is-active'} 
+                className={pathname === '/add-device' ? 'is-active' : ''}
               >
                 <NavLink 
                   href="/add-device"
@@ -71,7 +71,7 @@ class Header extends Component {
                 </NavLink>
               </NavItem>
               <NavItem
-                className={pathname === '/add-device-type' && 'is-active'}
+                className={pathname === '/add-device-type' ? 'is-active' : ''}
               >
                 <NavLink 
                   href="/add-device-type"

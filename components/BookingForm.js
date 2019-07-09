@@ -6,8 +6,10 @@ import {
   FormGroup,
   Label,
   Input,
-  FormText
+  ModalBody,
+  ModalFooter
 } from 'reactstrap'
+import '../styles/BookingForm.scss'
 
 const addBooking = gql`
   mutation CreateBooking($deviceId: ID!,
@@ -46,6 +48,10 @@ const BookingForm = (props) => {
       borrowedDateInput,
       notesInput,
       expectedReturnDateInput;
+  const { 
+    toggleBookingModal,
+    headerChildren
+   } = props;
   return (
     <Mutation mutation={addBooking}>
       {(addBooking, { data }) => (
@@ -69,66 +75,72 @@ const BookingForm = (props) => {
             notesInput.value = "";
           }}
         >
-          <FormGroup>
-            <Label for="borrowerNameInput">Name:</Label>
-            <Input
-              required
-              type="text"
-              name="borrowerNameInput"
-              id="borrowerNameInput"
-              innerRef={node => {
-                borrowerNameInput = node;
-              }}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="borrowerEmailInput">Email:</Label>
-            <Input
-              required
-              type="text"
-              name="borrowerEmailInput"
-              id="borrowerEmailInput"
-              innerRef={node => {
-                borrowerEmailInput = node;
-              }}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="borrowedDateInput">Borrowed date:</Label>
-            <Input
-              required
-              type="date"
-              name="borrowedDateInput"
-              id="borrowedDateInput"
-              innerRef={node => {
-                borrowedDateInput = node;
-              }}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="expectedReturnDateInput">Expected return date:</Label>
-            <Input
-              required
-              type="date"
-              name="expectedReturnDateInput"
-              id="expectedReturnDateInput"
-              innerRef={node => {
-                expectedReturnDateInput = node;
-              }}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="notesInput">Notes:</Label>
-            <Input
-              type="textarea"
-              name="notesInput"
-              id="notesInput"
-              innerRef={node => {
-                notesInput = node;
-              }}
-            />
-          </FormGroup>
-          <Button color="success" type="submit">Add Booking</Button>
+          <ModalBody>
+            {headerChildren}
+            <FormGroup>
+              <Label for="borrowerNameInput">Name:</Label>
+              <Input
+                required
+                type="text"
+                name="borrowerNameInput"
+                id="borrowerNameInput"
+                innerRef={node => {
+                  borrowerNameInput = node;
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="borrowerEmailInput">Email:</Label>
+              <Input
+                required
+                type="text"
+                name="borrowerEmailInput"
+                id="borrowerEmailInput"
+                innerRef={node => {
+                  borrowerEmailInput = node;
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="borrowedDateInput">Borrowed date:</Label>
+              <Input
+                required
+                type="date"
+                name="borrowedDateInput"
+                id="borrowedDateInput"
+                innerRef={node => {
+                  borrowedDateInput = node;
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="expectedReturnDateInput">Expected return date:</Label>
+              <Input
+                required
+                type="date"
+                name="expectedReturnDateInput"
+                id="expectedReturnDateInput"
+                innerRef={node => {
+                  expectedReturnDateInput = node;
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="notesInput">Notes:</Label>
+              <Input
+                type="textarea"
+                name="notesInput"
+                id="notesInput"
+                innerRef={node => {
+                  notesInput = node;
+                }}
+              />
+            </FormGroup>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="success" type="submit">Add Booking</Button>
+            <Button color="secondary" onClick={toggleBookingModal}>Cancel</Button>
+          </ModalFooter>
         </Form>
       )}
     </Mutation>
