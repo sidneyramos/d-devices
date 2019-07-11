@@ -119,7 +119,7 @@ class DeviceList extends Component {
         results: res,
         bookingSuccess: true,
       };
-    })
+    });
 
     setTimeout(() => {
       this.setState({

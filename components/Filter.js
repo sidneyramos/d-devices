@@ -113,8 +113,6 @@ class Filter extends Component {
   render() {
     const {loading, error } = this.props.data;
 
-    const input = {};
-
     if (!loading && this.props.data.devices) {
       const locations = this.props.data.devices.reduce((total, item) => {
         let res = total;
@@ -159,9 +157,6 @@ class Filter extends Component {
                   type="select"
                   name="categorySelect"
                   id="categorySelect"
-                  innerRef={node => {
-                    input["category"] = node;
-                  }}
                   >
                     <option value="">All</option>
                     {
@@ -177,9 +172,6 @@ class Filter extends Component {
                   type="select"
                   name="locationSelect"
                   id="locationSelect"
-                  innerRef={node => {
-                    input["location"] = node;
-                  }}
                   >
                   <option value="">All</option>
                   {
@@ -195,9 +187,6 @@ class Filter extends Component {
                   type="select"
                   name="availabilitySelect"
                   id="availabilitySelect"
-                  innerRef={node => {
-                    input["availability"] = node;
-                  }}
                   >
                     <option value="">All</option>
                     <option value="available">Available</option>
