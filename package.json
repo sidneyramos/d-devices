@@ -46,7 +46,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "babel-eslint": "^8.2.6",
-    "node-sass": "^4.9.3",
+    "node-sass": "^7.0.0",
     "standard": "^10.0.3",
     "styled-jsx-plugin-sass": "^0.2.4",
     "webpack": "4.28.4"
