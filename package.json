@@ -27,7 +27,7 @@
     "graphql-anywhere": "^4.0.1",
     "graphql-tag": "^2.5.0",
     "isomorphic-unfetch": "^2.0.0",
-    "next": "^8.1.0",
+    "next": "^13.0.3",
     "prop-types": "^15.6.0",
     "react": "^16.8.6",
     "react-accessible-accordion": "^2.4.4",
