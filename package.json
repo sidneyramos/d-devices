@@ -21,7 +21,7 @@
     "axios": "^0.18.0",
     "babel-loader": "^7.1.5",
     "bootstrap": "^4.1.3",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "filestack-js": "^1.6.0",
     "graphql": "^0.11.7",
     "graphql-anywhere": "^4.0.1",
